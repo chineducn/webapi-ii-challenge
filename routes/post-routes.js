@@ -66,4 +66,77 @@ router.post('/', (req, res) => {
     }
 })
 
+router.delete('/:id', (req, res) => {
+    const { id } = req.params
+    db.remove(id)
+        .then(data => {
+            if (data) {
+                res
+                    .status(200)
+                    .json({
+                        success: true,
+                        message: `The post with ID ${id} has been deleted`
+                    })
+            }
+            else {
+                res
+                    .status(404)
+                    .json({
+                        success: false,
+                        message: `The post with ID ${id} does not exist.`
+                    })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                success: false,
+                message: "The post cannot be removed",
+                error
+            })
+        })
+})
+
+router.put('/:id', (req, res) => {
+    const { title, contents } = req.body
+    const { id } = req.params
+    if (title && contents) {
+        db.update(id, req.body)
+            .then(data => {
+                if (data) {
+                    res
+                        .status(200)
+                        .json({
+                            success: true,
+                            message: `The post with ID ${id} has been updated`,
+                            data
+                        })
+                }
+                else {
+                    res
+                        .status(404)
+                        .json({
+                            success: false,
+                            message: `The post with ID ${id} does not exist`
+                        })
+                }
+            })
+            .catch(error => {
+                res
+                    .status(500)
+                    .json({
+                        success: false,
+                        message: "The post information could not be modified.",
+                        error
+                    })
+            })
+    }
+    else {
+        res
+            .status(400)
+            .json({
+                success: false,
+                message: "Please provide the title and contents for the post."
+            })
+    }
+})
 module.exports = router
