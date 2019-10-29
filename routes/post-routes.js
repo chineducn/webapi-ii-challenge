@@ -42,6 +42,29 @@ router.get('/:id', (req, res) => {
             })
         })
 })
+
+router.post('/', (req, res) => {
+    const { title, contents } = req.body
+    if (title && contents) {
+        db.insert(req.body)
+            .then(data => {
+                res.status(201).json(data)
+            })
+            .catch(error => {
+                res.status(500).json({
+                    success: false,
+                    message: "There was an error while saving the post to the database",
+                    error
+                })
+            })
+    } 
+    else {
+        res.status(400).json({
+            success: false,
+            message: "Please provide the title and contents for the post."
+        })
+    }
+})
 //Basic get request
 router.get('*', (req, res) => {
     res.json("This post shouldn't not be hilarious")
