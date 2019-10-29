@@ -1,10 +1,13 @@
 const express = require('express');
 const posts = require('../data/seeds/01-posts')
 const db = require('../data/db')
+const commentRoutes = require('./comment-routes')
+
 
 const router = express.Router()
 
 router.use(express.json())
+router.use('/:id/comments', commentRoutes)
 
 // Get all posts
 router.get('/', (req, res) => {
