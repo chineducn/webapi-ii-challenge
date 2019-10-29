@@ -1,13 +1,10 @@
 const express = require('express');
-const posts = require('../data/seeds/01-posts')
 const db = require('../data/db')
-const commentRoutes = require('./comment-routes')
 
 
 const router = express.Router()
 
 router.use(express.json())
-router.use('/:id/comments', commentRoutes)
 
 // Get all posts
 router.get('/', (req, res) => {
@@ -67,10 +64,6 @@ router.post('/', (req, res) => {
             message: "Please provide the title and contents for the post."
         })
     }
-})
-//Basic get request
-router.get('*', (req, res) => {
-    res.json("This post shouldn't not be hilarious")
 })
 
 module.exports = router
