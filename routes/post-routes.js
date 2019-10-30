@@ -1,10 +1,12 @@
 const express = require('express');
+const cors = require('cors')
 const db = require('../data/db')
 
 
 const router = express.Router()
 
 router.use(express.json())
+router.use(cors())
 
 // Get all posts
 router.get('/', (req, res) => {

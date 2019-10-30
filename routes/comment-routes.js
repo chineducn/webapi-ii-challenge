@@ -1,9 +1,11 @@
 const express = require('express')
+const cors = require('cors')
 const db = require('../data/db')
 
 const router = express.Router()
 
 router.use(express.json())
+router.use(cors())
 
 // Retrieving all the comments for a specified post
 router.get('/:id/comments', (req, res) => {
