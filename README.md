@@ -105,16 +105,16 @@ Configure the API to handle to the following routes:
 
 When the client makes a `POST` request to `/api/posts/:id/comments`:
 
-- If the _post_ with the specified `id` is not found:
+<!-- - If the _post_ with the specified `id` is not found:
 
   - return HTTP status code `404` (Not Found).
-  - return the following JSON object: `{ message: "The post with the specified ID does not exist." }`.
+  - return the following JSON object: `{ message: "The post with the specified ID does not exist." }`. -->
 
-- If the request body is missing the `text` property:
+<!-- - If the request body is missing the `text` property:
 
   - cancel the request.
   - respond with HTTP status code `400` (Bad Request).
-  - return the following JSON response: `{ errorMessage: "Please provide text for the comment." }`.
+  - return the following JSON response: `{ errorMessage: "Please provide text for the comment." }`. -->
 
 - If the information about the _comment_ is valid:
 

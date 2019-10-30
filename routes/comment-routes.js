@@ -5,6 +5,7 @@ const router = express.Router()
 
 router.use(express.json())
 
+// Retrieving all the comments for a specified post
 router.get('/:id/comments', (req, res) => {
     const { id } = req.params
     db.findPostComments(id)
@@ -28,8 +29,72 @@ router.get('/:id/comments', (req, res) => {
         })
 })
 
-router.post('*', (req, res) => {
-    res.json("This comment can't be unreal")
+// Creating a new comment in a post
+router.post('/:id/comments', (req, res) => {
+    const { id } = req.params
+    const comment = {
+        text: req.body.text,
+        post_id: id,
+    }
+    if (comment.text) {
+        db.findById(id)
+            .then(post => {
+                if (post.length) {
+                    db.insertComment(comment)
+                        .then(data => {
+                            db.findCommentById(data.id)
+                                .then(commentArray => {
+                                    res
+                                        .status(201)
+                                        .json(commentArray[0])
+                                })
+                                .catch(error => {
+                                    res
+                                        .status(500)
+                                        .json({
+                                            success: false,
+                                            message: `Could not return the newly created comment`,
+                                            error
+                                        })
+                                })
+                        })
+                        .catch(error => {
+                            res
+                                .status(500)
+                                .json({
+                                    success: false,
+                                    message: "There was an error while saving the comment to the database.",
+                                    error
+                                })
+                        })
+                }
+                else {
+                    res
+                        .status(404)
+                        .json({
+                            success: false,
+                            message: `The post with specified id ${id} does not exist.`
+                        })
+                }
+            })
+            .catch(error => {
+                res
+                    .status(500)
+                    .json({
+                        success: false,
+                        message: "There was an error while saving the comment to the database.",
+                        error
+                    })
+            })        
+    }
+    else {
+        res
+            .status(400)
+            .json({
+                success: false,
+                message: "Please provide the text for the comment."
+            })
+    }
 })
 
 module.exports = router
