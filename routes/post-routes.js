@@ -43,12 +43,25 @@ router.get('/:id', (req, res) => {
         })
 })
 
+// Adding a new post to the db
 router.post('/', (req, res) => {
     const { title, contents } = req.body
     if (title && contents) {
         db.insert(req.body)
             .then(data => {
-                res.status(201).json(data)
+                db.findById(data.id)
+                        .then(post => {
+                            res
+                                .status(201)
+                                .json(post[0])
+                        })
+                        .catch(error => {
+                            res.status(500).json({
+                                success: false,
+                                message: "The newly created post information could not be retrieved.",
+                                error
+                            })
+                        })
             })
             .catch(error => {
                 res.status(500).json({
@@ -66,6 +79,7 @@ router.post('/', (req, res) => {
     }
 })
 
+// Deleting a post by specified id
 router.delete('/:id', (req, res) => {
     const { id } = req.params
     db.remove(id)
@@ -146,4 +160,5 @@ router.put('/:id', (req, res) => {
             })
     }
 })
+
 module.exports = router
