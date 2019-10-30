@@ -96,6 +96,7 @@ router.delete('/:id', (req, res) => {
         })
 })
 
+// Updating details of a post
 router.put('/:id', (req, res) => {
     const { title, contents } = req.body
     const { id } = req.params
@@ -103,12 +104,18 @@ router.put('/:id', (req, res) => {
         db.update(id, req.body)
             .then(data => {
                 if (data) {
-                    res
-                        .status(200)
-                        .json({
-                            success: true,
-                            message: `The post with ID ${id} has been updated`,
-                            data
+                    db.findById(id)
+                        .then(post => {
+                            res
+                                .status(200)
+                                .json(post[0])
+                        })
+                        .catch(error => {
+                            res.status(500).json({
+                                success: false,
+                                message: "The newly updated post information could not be retrieved.",
+                                error
+                            })
                         })
                 }
                 else {
